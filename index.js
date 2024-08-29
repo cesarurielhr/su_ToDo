@@ -14,7 +14,7 @@ app.post('/tareas', (req, res) => {
 
     // Verifica que sea un array
     if (!Array.isArray(tareasNuevas)) {
-        return res.status(400).json({ message: 'El cuerpo de la solicitud debe ser un array de tareas' });
+        return res.status(400).json({ message: 'Error de formato en el array' });
     }
 
     // Validar y agregar cada tarea
@@ -85,32 +85,6 @@ app.delete('/tareas/:id', (req, res) => {
     res.status(204).send();
 });
 
-// Ruta para calcular estadísticas sobre las tareas (GET /tareas/estadisticas)
-app.get('tareas/estadisticas', (req, res) => {
-    if (tareas.length === 0) {
-        return res.status(200).json({
-            totalTareas: 0,
-            tareaMasReciente: null,
-            tareaMasAntigua: null,
-            completadas: 0,
-            pendientes: 0
-        });
-    }
-
-    const totalTareas = tareas.length;
-    const tareaMasReciente = tareas.reduce((prev, curr) => (prev.fechaCreacion > curr.fechaCreacion) ? prev : curr);
-    const tareaMasAntigua = tareas.reduce((prev, curr) => (prev.fechaCreacion < curr.fechaCreacion) ? prev : curr);
-    const completadas = tareas.filter(t => t.completado).length;
-    const pendientes = totalTareas - completadas;
-
-    res.json({
-        totalTareas,
-        tareaMasReciente,
-        tareaMasAntigua,
-        completadas,
-        pendientes
-    });
-});
 
 // Manejo de rutas no encontradas
 app.use((req, res) => {
