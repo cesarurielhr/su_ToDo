@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-// Middleware para parsear JSON
+
 app.use(express.json());
 
 // Array en memoria para almacenar las tareas
@@ -12,12 +12,12 @@ let idCounter = 1;
 app.post('/tareas', (req, res) => {
     const tareasNuevas = req.body;
 
-    // Verifica que sea un array
-    if (!Array.isArray(tareasNuevas)) {
+    // Verifica que cumplas con los array
+    if (!Array.isArray(tareasNuevas)) 
         return res.status(400).json({ message: 'Error de formato en el array' });
-    }
+    
 
-    // Validar y agregar cada tarea
+    // Agregar tareas del arrays 
     const tareasCreadas = [];
     for (let i = 0; i < tareasNuevas.length; i++) {
         const tarea = tareasNuevas[i];
