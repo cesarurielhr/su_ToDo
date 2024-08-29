@@ -9,23 +9,35 @@ app.use(express.json());
 let tareas = [];
 let idCounter = 1;
 
-// Ruta para crear una nueva tarea (POST /tareas)
 app.post('/tareas', (req, res) => {
-    const { titulo, descripcion } = req.body;
+    const tareasNuevas = req.body;
 
-    if (!titulo || !descripcion) {
-        return res.status(400).json({ message: 'Título y descripción son requeridos' });
+    // Verifica que sea un array
+    if (!Array.isArray(tareasNuevas)) {
+        return res.status(400).json({ message: 'El cuerpo de la solicitud debe ser un array de tareas' });
     }
 
-    const nuevaTarea = {
-        id: idCounter++,
-        titulo,
-        descripcion,
-        completado: false,
-        fechaCreacion: new Date()
-    };
-    tareas.push(nuevaTarea);
-    res.status(201).json(nuevaTarea);
+    // Validar y agregar cada tarea
+    const tareasCreadas = [];
+    for (let i = 0; i < tareasNuevas.length; i++) {
+        const tarea = tareasNuevas[i];
+
+        if (!tarea.titulo || !tarea.descripcion) {
+            return res.status(400).json({ message: `La tarea en la posición ${i} no tiene un título o descripción válidos` });
+        }
+
+        const nuevaTarea = {
+            id: idCounter++,
+            titulo: tarea.titulo,
+            descripcion: tarea.descripcion,
+            completado: tarea.completado || false,
+            fechaCreacion: new Date()
+        };
+        tareas.push(nuevaTarea);
+        tareasCreadas.push(nuevaTarea);
+    }
+
+    res.status(201).json(tareasCreadas);
 });
 
 // Ruta para leer todas las tareas (GET /tareas)
